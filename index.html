@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    >
+
+    <meta
+        name="description"
+        content="An original endless mountain driving experience."
+    >
+
+    <meta name="theme-color" content="#071018">
+
+    <title>Mountain Roads</title>
+
+    <!--
+        Main stylesheet.
+        We will create style.css in the next stage.
+    -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =========================================================
+         LOADING SCREEN
+    ========================================================== -->
+
+    <div id="loading-screen">
+
+        <div class="loading-content">
+
+            <div class="game-logo">
+                MOUNTAIN
+                <span>ROADS</span>
+            </div>
+
+            <div class="loading-subtitle">
+                DRIVE • EXPLORE • DISCOVER
+            </div>
+
+            <div class="loading-bar-container">
+                <div id="loading-bar"></div>
+            </div>
+
+            <div id="loading-text">
+                Preparing your journey...
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         MAIN MENU
+    ========================================================== -->
+
+    <main id="main-menu" class="screen active">
+
+        <div class="menu-background"></div>
+
+        <div class="menu-content">
+
+            <div class="title-block">
+
+                <h1>MOUNTAIN ROADS</h1>
+
+                <p>
+                    Every road leads somewhere.
+                </p>
+
+            </div>
+
+
+            <div class="menu-buttons">
+
+                <button
+                    id="start-game-button"
+                    class="menu-button primary"
+                >
+                    START JOURNEY
+                </button>
+
+                <button
+                    id="continue-button"
+                    class="menu-button"
+                >
+                    CONTINUE
+                </button>
+
+                <button
+                    id="settings-button"
+                    class="menu-button"
+                >
+                    SETTINGS
+                </button>
+
+                <button
+                    id="about-button"
+                    class="menu-button"
+                >
+                    ABOUT
+                </button>
+
+            </div>
+
+
+            <div class="menu-footer">
+
+                <span>Mountain Roads</span>
+
+                <span>•</span>
+
+                <span>Version 1.0</span>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================================================
+         GAME CONTAINER
+    ========================================================== -->
+
+    <main id="game-container" class="hidden">
+
+        <!--
+            Three.js will render the actual world here.
+        -->
+
+        <div id="game-canvas-container"></div>
+
+
+        <!-- =====================================================
+             TOP HUD
+        ====================================================== -->
+
+        <div id="top-hud">
+
+            <div class="hud-left">
+
+                <div class="hud-card">
+
+                    <span class="hud-label">
+                        DISTANCE
+                    </span>
+
+                    <strong id="distance-value">
+                        0.0 km
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="hud-center">
+
+                <div id="location-name">
+                    MOUNTAIN PASS
+                </div>
+
+                <div id="weather-name">
+                    CLEAR
+                </div>
+
+            </div>
+
+
+            <div class="hud-right">
+
+                <div class="hud-card">
+
+                    <span class="hud-label">
+                        TIME
+                    </span>
+
+                    <strong id="time-value">
+                        06:00
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             SPEEDOMETER
+        ====================================================== -->
+
+        <div id="speedometer">
+
+            <div class="speed-number">
+
+                <span id="speed-value">
+                    0
+                </span>
+
+                <small>
+                    KM/H
+                </small>
+
+            </div>
+
+
+            <div class="speed-bar">
+
+                <div id="speed-fill"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             VEHICLE STATUS
+        ====================================================== -->
+
+        <div id="vehicle-status">
+
+            <div class="status-item">
+
+                <span>
+                    FUEL
+                </span>
+
+                <div class="status-bar">
+
+                    <div
+                        id="fuel-fill"
+                        class="fuel"
+                    ></div>
+
+                </div>
+
+            </div>
+
+
+            <div class="status-item">
+
+                <span>
+                    CONDITION
+                </span>
+
+                <div class="status-bar">
+
+                    <div
+                        id="condition-fill"
+                        class="condition"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             WEATHER INDICATOR
+        ====================================================== -->
+
+        <div id="weather-indicator">
+
+            <div id="weather-icon">
+                ☀
+            </div>
+
+            <div>
+
+                <span class="weather-small">
+                    WEATHER
+                </span>
+
+                <strong id="weather-status">
+                    CLEAR
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             MINIMAP
+        ====================================================== -->
+
+        <div id="minimap">
+
+            <div class="minimap-title">
+                JOURNEY
+            </div>
+
+            <canvas
+                id="minimap-canvas"
+                width="180"
+                height="180"
+            ></canvas>
+
+        </div>
+
+
+        <!-- =====================================================
+             CONTROLS HELP
+        ====================================================== -->
+
+        <div id="controls-hint">
+
+            <span>
+                W / ↑
+            </span>
+
+            <small>
+                Accelerate
+            </small>
+
+            <span>
+                S / ↓
+            </span>
+
+            <small>
+                Brake
+            </small>
+
+            <span>
+                A / ←
+            </span>
+
+            <small>
+                Left
+            </small>
+
+            <span>
+                D / →
+            </span>
+
+            <small>
+                Right
+            </small>
+
+        </div>
+
+
+        <!-- =====================================================
+             GAME PAUSE BUTTON
+        ====================================================== -->
+
+        <button
+            id="pause-button"
+            class="hud-button"
+            aria-label="Pause game"
+        >
+            II
+        </button>
+
+
+        <!-- =====================================================
+             MOBILE CONTROLS
+        ====================================================== -->
+
+        <div id="mobile-controls">
+
+            <div class="mobile-left">
+
+                <button
+                    id="mobile-left"
+                    class="drive-button"
+                >
+                    ◀
+                </button>
+
+                <button
+                    id="mobile-right"
+                    class="drive-button"
+                >
+                    ▶
+                </button>
+
+            </div>
+
+
+            <div class="mobile-right">
+
+                <button
+                    id="mobile-brake"
+                    class="drive-button brake"
+                >
+                    BRAKE
+                </button>
+
+                <button
+                    id="mobile-gas"
+                    class="drive-button gas"
+                >
+                    GAS
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             PAUSE MENU
+        ====================================================== -->
+
+        <div
+            id="pause-menu"
+            class="overlay hidden"
+        >
+
+            <div class="pause-panel">
+
+                <h2>
+                    PAUSED
+                </h2>
+
+                <p>
+                    Your journey is waiting.
+                </p>
+
+                <button
+                    id="resume-button"
+                    class="menu-button primary"
+                >
+                    RESUME
+                </button>
+
+                <button
+                    id="restart-button"
+                    class="menu-button"
+                >
+                    RESTART JOURNEY
+                </button>
+
+                <button
+                    id="quit-button"
+                    class="menu-button"
+                >
+                    MAIN MENU
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+             GAME OVER
+        ====================================================== -->
+
+        <div
+            id="game-over"
+            class="overlay hidden"
+        >
+
+            <div class="game-over-panel">
+
+                <h2>
+                    JOURNEY COMPLETE
+                </h2>
+
+                <div class="final-distance">
+
+                    <span>
+                        DISTANCE
+                    </span>
+
+                    <strong id="final-distance-value">
+                        0.0 km
+                    </strong>
+
+                </div>
+
+
+                <div class="final-time">
+
+                    <span>
+                        JOURNEY TIME
+                    </span>
+
+                    <strong id="final-time-value">
+                        00:00
+                    </strong>
+
+                </div>
+
+
+                <button
+                    id="new-journey-button"
+                    class="menu-button primary"
+                >
+                    NEW JOURNEY
+                </button>
+
+                <button
+                    id="game-over-menu-button"
+                    class="menu-button"
+                >
+                    MAIN MENU
+                </button>
+
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================================================
+         SETTINGS SCREEN
+    ========================================================== -->
+
+    <section
+        id="settings-screen"
+        class="screen hidden"
+    >
+
+        <div class="settings-panel">
+
+            <button
+                id="settings-back"
+                class="back-button"
+            >
+                ← BACK
+            </button>
+
+            <h2>
+                SETTINGS
+            </h2>
+
+
+            <div class="settings-group">
+
+                <h3>
+                    GRAPHICS
+                </h3>
+
+
+                <label class="setting-row">
+
+                    <span>
+                        Graphics Quality
+                    </span>
+
+                    <select id="graphics-quality">
+
+                        <option value="low">
+                            Low
+                        </option>
+
+                        <option
+                            value="medium"
+                            selected
+                        >
+                            Medium
+                        </option>
+
+                        <option value="high">
+                            High
+                        </option>
+
+                        <option value="ultra">
+                            Ultra
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <label class="setting-row">
+
+                    <span>
+                        Shadows
+                    </span>
+
+                    <input
+                        type="checkbox"
+                        id="shadows-toggle"
+                        checked
+                    >
+
+                </label>
+
+
+                <label class="setting-row">
+
+                    <span>
+                        Weather Effects
+                    </span>
+
+                    <input
+                        type="checkbox"
+                        id="weather-toggle"
+                        checked
+                    >
+
+                </label>
+
+            </div>
+
+
+            <div class="settings-group">
+
+                <h3>
+                    GAMEPLAY
+                </h3>
+
+
+                <label class="setting-row">
+
+                    <span>
+                        Automatic Day/Night
+                    </span>
+
+                    <input
+                        type="checkbox"
+                        id="day-night-toggle"
+                        checked
+                    >
+
+                </label>
+
+
+                <label class="setting-row">
+
+                    <span>
+                        Traffic
+                    </span>
+
+                    <input
+                        type="checkbox"
+                        id="traffic-toggle"
+                        checked
+                    >
+
+                </label>
+
+
+                <label class="setting-row">
+
+                    <span>
+                        Camera Shake
+                    </span>
+
+                    <input
+                        type="checkbox"
+                        id="camera-shake-toggle"
+                        checked
+                    >
+
+                </label>
+
+            </div>
+
+
+            <div class="settings-group">
+
+                <h3>
+                    AUDIO
+                </h3>
+
+
+                <label class="setting-row">
+
+                    <span>
+                        Master Volume
+                    </span>
+
+                    <input
+                        type="range"
+                        id="master-volume"
+                        min="0"
+                        max="100"
+                        value="70"
+                    >
+
+                </label>
+
+
+                <label class="setting-row">
+
+                    <span>
+                        Music
+                    </span>
+
+                    <input
+                        type="range"
+                        id="music-volume"
+                        min="0"
+                        max="100"
+                        value="50"
+                    >
+
+                </label>
+
+
+                <label class="setting-row">
+
+                    <span>
+                        Engine Sound
+                    </span>
+
+                    <input
+                        type="range"
+                        id="engine-volume"
+                        min="0"
+                        max="100"
+                        value="80"
+                    >
+
+                </label>
+
+            </div>
+
+
+            <button
+                id="save-settings-button"
+                class="menu-button primary"
+            >
+                SAVE SETTINGS
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         ABOUT SCREEN
+    ========================================================== -->
+
+    <section
+        id="about-screen"
+        class="screen hidden"
+    >
+
+        <div class="about-panel">
+
+            <button
+                id="about-back"
+                class="back-button"
+            >
+                ← BACK
+            </button>
+
+
+            <h2>
+                MOUNTAIN ROADS
+            </h2>
+
+            <p class="about-lead">
+                A peaceful journey through an ever-changing
+                mountain landscape.
+            </p>
+
+
+            <div class="about-section">
+
+                <h3>
+                    THE JOURNEY
+                </h3>
+
+                <p>
+                    Drive through winding mountain roads,
+                    forests, valleys and remote settlements.
+                    Every journey is different.
+                </p>
+
+            </div>
+
+
+            <div class="about-section">
+
+                <h3>
+                    DYNAMIC WORLD
+                </h3>
+
+                <p>
+                    The world changes around you. Day becomes
+                    night, weather shifts, fog rolls through
+                    valleys and the landscape continues beyond
+                    the horizon.
+                </p>
+
+            </div>
+
+
+            <div class="about-section">
+
+                <h3>
+                    CONTROLS
+                </h3>
+
+                <p>
+                    Use W / A / S / D or the arrow keys to
+                    drive. Controller and touch controls can
+                    also be enabled.
+                </p>
+
+            </div>
+
+
+            <div class="about-footer">
+
+                Mountain Roads
+
+                <br>
+
+                Original game project
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =========================================================
+         ERROR MESSAGE
+    ========================================================== -->
+
+    <div
+        id="error-message"
+        class="error-message hidden"
+    >
+
+        <div class="error-panel">
+
+            <h2>
+                Something went wrong
+            </h2>
+
+            <p id="error-text">
+                The game could not be loaded.
+            </p>
+
+            <button
+                id="error-reload"
+                class="menu-button primary"
+            >
+                RELOAD
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+         JAVASCRIPT
+    ========================================================== -->
+
+    <!--
+        We will load the Three.js engine and our game scripts
+        from script.js.
+
+        script.js will be created later.
+    -->
+
+    <script
+        src="script.js"
+        defer
+    ></script>
+
+</body>
+</html>
